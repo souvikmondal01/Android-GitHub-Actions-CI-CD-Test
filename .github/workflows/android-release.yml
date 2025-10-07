@@ -5,16 +5,6 @@ on:
   push:
     branches:
       - main
-
-permissions:
-  contents: write     # allows pushing artifacts and updating code
-  packages: write     # optional, for package registry
-  issues: write       # optional
-  pull-requests: write
-  actions: read       # optional
-  releases: write
-
-
 jobs:
   build:
     runs-on: ubuntu-latest
