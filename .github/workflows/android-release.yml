@@ -51,14 +51,14 @@ jobs:
         with:
           name: app-release-apk
 #          path: app/release/app-release.apk
-          path: app/build/outputs/apl/release/app-release-unsigned.apk
+          path: app/build/outputs/apk/release/app-release-unsigned.apk
           if-no-files-found: error
 
       - name: 🚀 Create GitHub Release & Upload APK
         uses: softprops/action-gh-release@v2
         with:
 #          files: app/release/app-release.apk
-          files: app/build/outputs/apl/release/app-release-unsigned.apk
+          files: app/build/outputs/apk/release/app-release-unsigned.apk
           name: Release ${{ github.run_number }}
           body: |
             This is a new release!
