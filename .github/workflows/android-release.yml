@@ -23,12 +23,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      #          cache: gradle
-
-      - name: 🔑 Decode Keystore
-        run: |
-          mkdir -p app
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app/release-key.jks
+          cache: 'gradle'
 
       - name: 🛠️ Make gradlew executable
         run: chmod +x gradlew
@@ -38,6 +33,11 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
+
+      - name: 🔑 Decode Keystore
+        run: |
+          mkdir -p app
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app/release-key.jks
 
       - name: 🏗️ Build Signed Release APK
         run: ./gradlew assembleRelease
@@ -50,15 +50,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-release-apk
-#          path: app/release/app-release.apk
-          path: app/build/outputs/apk/release/app-release-unsigned.apk
+          path: app/release/app-release.apk
           if-no-files-found: error
 
       - name: 🚀 Create GitHub Release & Upload APK
         uses: softprops/action-gh-release@v2
         with:
-#          files: app/release/app-release.apk
-          files: app/build/outputs/apk/release/app-release-unsigned.apk
+          files: app/release/app-release.apk
           name: Release ${{ github.run_number }}
           body: |
             This is a new release!
