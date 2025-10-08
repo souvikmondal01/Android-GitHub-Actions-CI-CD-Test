@@ -23,16 +23,16 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-#          cache: 'gradle'
+      #          cache: 'gradle'
 
       - name: 🛠️ Make gradlew executable
         run: chmod +x gradlew
 
-#      - name: 🧹 Clean project
-#        run: ./gradlew clean
-#
-#      - name: Build with Gradle
-#        run: ./gradlew build
+      #      - name: 🧹 Clean project
+      #        run: ./gradlew clean
+      #
+      - name: Build with Gradle
+        run: ./gradlew build
 
       - name: 🔑 Decode Keystore
         run: |
