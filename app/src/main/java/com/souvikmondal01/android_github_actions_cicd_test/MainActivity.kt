@@ -36,6 +36,7 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(innerPadding),
                     ) {
+                        Text("Feature-1")
                         Text(
                             text = "GitHub Actions CI/CD Test",
                             style = MaterialTheme.typography.titleMedium,
