@@ -30,11 +30,11 @@ jobs:
           mkdir -p app
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app/release-key.jks
 
-#      - name: 🧹 Clean project
-#        run: ./gradlew clean
-
       - name: 🛠️ Make gradlew executable
         run: chmod +x gradlew
+
+      - name: 🧹 Clean project
+        run: ./gradlew clean
 
       - name: 🏗️ Build Signed Release APK
         run: ./gradlew assembleRelease
