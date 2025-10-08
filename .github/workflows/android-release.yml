@@ -36,6 +36,9 @@ jobs:
       - name: 🧹 Clean project
         run: ./gradlew clean
 
+      - name: Build with Gradle
+        run: ./gradlew build
+
       - name: 🏗️ Build Signed Release APK
         run: ./gradlew assembleRelease
         env:
