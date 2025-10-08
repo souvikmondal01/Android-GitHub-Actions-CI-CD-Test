@@ -28,7 +28,7 @@ jobs:
       - name: 🔑 Decode Keystore
         run: |
           mkdir -p app
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app/release-key.jks
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app/github-actions.jks
 
       - name: 🛠️ Make gradlew executable
         run: chmod +x gradlew
