@@ -43,9 +43,24 @@ jobs:
           path: app/release/app-release.apk
           if-no-files-found: error
 
-#      - name: 🚀 Create GitHub Release & Upload APK
-#        uses: softprops/action-gh-release@v2
-#        with:
+      - name: Download
+        uses: actions/download-artifact@v5
+        with:
+          name: app-name
+          path: your/destination/dir
+
+      - name: 🚀 Create GitHub Release & Upload APK
+        uses: softprops/action-gh-release@v2
+        with:
+          files: app/release/app-release.apk
+          name: Release ${{ github.ref_name }}
+          body: |
+            This is a new release!
+            See the attached asset for more details.
+          draft: false # Set to true to create a draft release
+          prerelease: false # Set to true for prereleases
+          generate_release_notes: true # Automatically generate release notes
+
 #          tag_name: v1.${{ github.run_number }}
 #          name: "Release ${{ github.run_number }}"
 #          files: app/release/app-release.apk
