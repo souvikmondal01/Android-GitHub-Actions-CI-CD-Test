@@ -12,13 +12,28 @@ android {
         applicationId = "com.souvikmondal01.android_github_actions_cicd_test"
         minSdk = 26
         targetSdk = 36
-        versionCode = 50
+        versionCode = 1
         versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("release-key.jks")
+            storePassword = System.getenv("KEYSTORE_PASSWORD")
+            keyAlias = System.getenv("KEY_ALIAS")
+            keyPassword = System.getenv("KEY_PASSWORD")
+        }
+    }
+
     buildTypes {
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = false
+            isShrinkResources = false
+        }
+
         release {
             isMinifyEnabled = false
             proguardFiles(
