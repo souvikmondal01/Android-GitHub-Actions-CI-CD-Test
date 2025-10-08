@@ -23,7 +23,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-#          cache: gradle
+      #          cache: gradle
 
       - name: 🔑 Decode Keystore
         run: |
@@ -51,7 +51,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: app/release/app-release.apk
-          name: Release ${{ github.ref_name }}
+          #          name: Release ${{ github.ref_name }}
+          name: Release ${{ github.run_number }}
           body: |
             This is a new release!
             See the attached asset for more details.
@@ -59,7 +60,7 @@ jobs:
           prerelease: false # Set to true for prereleases
           generate_release_notes: true # Automatically generate release notes
           tag_name: v1.${{ github.run_number }}
-#          tag_name: latest
+        #          tag_name: latest
         #          tag_name: v1.${{ github.run_number }}
         #          tag_name: v1.${{ github.run_number }}
         #          name: "Release ${{ github.run_number }}"

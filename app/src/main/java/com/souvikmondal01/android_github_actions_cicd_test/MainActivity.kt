@@ -42,6 +42,7 @@ class MainActivity : ComponentActivity() {
                             Text("Feature-2")
                             Text("Feature-3")
                             Text("Feature-4")
+                            Text("Feature-5")
                         }
                         Text(
                             text = "GitHub Actions CI/CD Test",
