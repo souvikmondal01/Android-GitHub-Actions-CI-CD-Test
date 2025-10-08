@@ -28,16 +28,16 @@ jobs:
       - name: 🔑 Decode Keystore
         run: |
           mkdir -p app
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app/github-actions.jks
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app/release-key.jks
 
       - name: 🛠️ Make gradlew executable
         run: chmod +x gradlew
 
-      - name: 🧹 Clean project
-        run: ./gradlew clean
-
-      - name: Build with Gradle
-        run: ./gradlew build
+#      - name: 🧹 Clean project
+#        run: ./gradlew clean
+#
+#      - name: Build with Gradle
+#        run: ./gradlew build
 
       - name: 🏗️ Build Signed Release APK
         run: ./gradlew assembleRelease
