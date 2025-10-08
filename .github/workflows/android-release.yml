@@ -30,6 +30,9 @@ jobs:
           mkdir -p app
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app/release-key.jks
 
+      - name: 🧹 Clean project
+        run: ./gradlew clean
+
       - name: 🛠️ Make gradlew executable
         run: chmod +x gradlew
 
@@ -51,7 +54,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: app/release/app-release.apk
-          #          name: Release ${{ github.ref_name }}
           name: Release ${{ github.run_number }}
           body: |
             This is a new release!
@@ -60,11 +62,6 @@ jobs:
           prerelease: false # Set to true for prereleases
           generate_release_notes: true # Automatically generate release notes
           tag_name: v1.${{ github.run_number }}
-        #          tag_name: latest
-        #          tag_name: v1.${{ github.run_number }}
-        #          tag_name: v1.${{ github.run_number }}
-        #          name: "Release ${{ github.run_number }}"
-        #          files: app/release/app-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
