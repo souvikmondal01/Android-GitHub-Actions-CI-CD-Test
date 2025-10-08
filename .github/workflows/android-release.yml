@@ -54,7 +54,7 @@ jobs:
           draft: false # Set to true to create a draft release
           prerelease: false # Set to true for prereleases
           generate_release_notes: true # Automatically generate release notes
-
+          tag_name: v1.${{ github.run_number }}
 #          tag_name: v1.${{ github.run_number }}
 #          name: "Release ${{ github.run_number }}"
 #          files: app/release/app-release.apk
