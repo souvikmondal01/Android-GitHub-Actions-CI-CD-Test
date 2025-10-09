@@ -36,12 +36,6 @@ jobs:
           VERSION_NAME=$(grep -oP 'versionName\s*=\s*"\K[0-9]+\.[0-9]+\.[0-9]+' app/build.gradle.kts)
           echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
 
-      #      - name: Version Bump
-      #        uses: chkfung/android-version-actions@v1.2.3
-      #        with:
-      #          gradlePath: app/build.gradle.kts
-      #          versionCode: ${{ github.run_number }}
-
       - name: Make gradlew executable
         run: chmod +x gradlew
 
@@ -63,16 +57,14 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: app/build/outputs/apk/release/app-release.apk
-          #          name: Release ${{ github.run_number }}
-          name: Release v${{ env.VERSION_NAME }}
+          name: v${{ env.VERSION_NAME }}
           body: |
             This is a new release!
             See the attached asset for more details.
           draft: false
           prerelease: false
           generate_release_notes: true
-          #          tag_name: v1.${{ github.run_number }}
-          tag_name: latest
+          tag_name: v${{ env.VERSION_NAME }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -82,4 +74,4 @@ jobs:
           -H "Authorization: token ${{ secrets.GH_PAT }}" \
           -H "Accept: application/vnd.github+json" \
           https://api.github.com/repos/${{ github.repository }} \
-          -d "{\"homepage\":\"https://github.com/${{ github.repository }}/releases/download/latest/app-release.apk\"}"
+          -d "{\"homepage\":\"https://github.com/${{ github.repository }}/releases/download/v${{ env.VERSION_NAME }}/app-release.apk\"}"
