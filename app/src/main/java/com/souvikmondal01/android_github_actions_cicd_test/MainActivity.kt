@@ -38,8 +38,7 @@ class MainActivity : ComponentActivity() {
                             .padding(innerPadding),
                     ) {
                         Column {
-                            Text("New-Feature-1")
-                            Text("New-Feature-2")
+                            Text("Feature-1")
                         }
                         Text(
                             text = "GitHub Actions CI/CD Test",
