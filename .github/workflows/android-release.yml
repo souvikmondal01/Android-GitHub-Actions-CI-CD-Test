@@ -24,44 +24,43 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: 🔑 Decode Keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > release-key.jks
+      #        run: |
+      #          mkdir -p app
+      #          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app/release-key.jks
+
       - name: Make gradlew executable
         run: chmod +x gradlew
 
-      - name: 🔑 Decode Keystore
-        run: |
-          mkdir -p app
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > release-key.jks
-
       - name: 🏗️ Build Signed Release APK
-        run: ./gradlew assembleRelease
-        env:
-          KEYSTORE_FILE: app/release-key.jks
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-
-      - name: 🧹 Cleanup Keystore
-        if: always()
-        run: rm -f app/release-key.jks
+        run: ./gradlew clean assembleRelease
+      #        env:
+      #          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      #          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      #          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
       - name: 📤 Upload Signed APK (Artifact)
         uses: actions/upload-artifact@v4
         with:
           name: app-release-apk
-          path: app/release/app-release.apk
+          #          path: app/release/app-release.apk
+          path: app/build/outputs/apk/release/app-release.apk
           if-no-files-found: error
 
       - name: 🚀 Create GitHub Release & Upload APK
         uses: softprops/action-gh-release@v2
         with:
-          files: app/release/app-release.apk
+          #          files: app/release/app-release.apk
+          files: app/build/outputs/apk/release/app-release.apk
           name: Release ${{ github.run_number }}
           body: |
             This is a new release!
             See the attached asset for more details.
-          draft: false
-          prerelease: false
-          generate_release_notes: true
+          draft: false # Set to true to create a draft release
+          prerelease: false # Set to true for prereleases
+          generate_release_notes: true # Automatically generate release notes
           tag_name: v1.${{ github.run_number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
