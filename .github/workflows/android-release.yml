@@ -60,7 +60,7 @@ jobs:
       - name: Create GitHub Release & Upload APK
         uses: softprops/action-gh-release@v2
         with:
-          files: app/build/outputs/apk/release/app-release.apk
+          files: app/build/outputs/apk/release/appname-v${{ env.VERSION_NAME }}.apk
           name: v${{ env.VERSION_NAME }}
           body: |
             This is a new release!
