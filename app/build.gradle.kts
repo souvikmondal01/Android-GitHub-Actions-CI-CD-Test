@@ -12,8 +12,8 @@ android {
         applicationId = "com.souvikmondal01.android_github_actions_cicd_test"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.2.0"
+        versionCode = 3
+        versionName = "1.3.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
