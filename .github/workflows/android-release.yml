@@ -23,6 +23,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: gradle
 
       - name: Decode Keystore
         run: |
@@ -34,10 +35,10 @@ jobs:
 
       - name: Build Signed Release APK
         run: ./gradlew clean assembleRelease
-#        env:
-#          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-#          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-#          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
       - name: Upload Signed APK (Artifact)
         uses: actions/upload-artifact@v4
@@ -50,14 +51,16 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: app/build/outputs/apk/release/app-release.apk
-          name: Release ${{ github.run_number }}
+#          name: Release ${{ github.run_number }}
+          name: Release latest
           body: |
             This is a new release!
             See the attached asset for more details.
           draft: false
           prerelease: false
           generate_release_notes: true
-          tag_name: v1.${{ github.run_number }}
+#          tag_name: v1.${{ github.run_number }}
+          tag_name: latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -67,4 +70,5 @@ jobs:
           -H "Authorization: token ${{ secrets.GH_PAT }}" \
           -H "Accept: application/vnd.github+json" \
           https://api.github.com/repos/${{ github.repository }} \
-          -d "{\"homepage\":\"https://github.com/${{ github.repository }}/releases/download/v1.${{ github.run_number }}/app-release.apk\"}"
+#          -d "{\"homepage\":\"https://github.com/${{ github.repository }}/releases/download/v1.${{ github.run_number }}/app-release.apk\"}"
+          -d "{\"homepage\":\"https://github.com/${{ github.repository }}/releases/download/latest/app-release.apk\"}"
