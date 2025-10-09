@@ -15,24 +15,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🧾 Checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: ☕ Set up JDK 17
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-      #          cache: 'gradle'
 
-      - name: 🛠️ Make gradlew executable
+      - name: Make gradlew executable
         run: chmod +x gradlew
-
-      #      - name: 🧹 Clean project
-      #        run: ./gradlew clean
-      #
-      - name: Build with Gradle
-        run: ./gradlew build
 
       - name: 🔑 Decode Keystore
         run: |
@@ -42,9 +35,14 @@ jobs:
       - name: 🏗️ Build Signed Release APK
         run: ./gradlew assembleRelease
         env:
+          KEYSTORE_FILE: app/release-key.jks
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+      - name: 🧹 Cleanup Keystore
+        if: always()
+        run: rm -f app/release-key.jks
 
       - name: 📤 Upload Signed APK (Artifact)
         uses: actions/upload-artifact@v4
@@ -54,6 +52,7 @@ jobs:
           if-no-files-found: error
 
       - name: 🚀 Create GitHub Release & Upload APK
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
           files: app/release/app-release.apk
@@ -61,14 +60,15 @@ jobs:
           body: |
             This is a new release!
             See the attached asset for more details.
-          draft: false # Set to true to create a draft release
-          prerelease: false # Set to true for prereleases
-          generate_release_notes: true # Automatically generate release notes
+          draft: false
+          prerelease: false
+          generate_release_notes: true
           tag_name: v1.${{ github.run_number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update GitHub Repo Website URL
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           curl -X PATCH \
           -H "Authorization: token ${{ secrets.GH_PAT }}" \
