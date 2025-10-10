@@ -46,10 +46,6 @@ jobs:
             echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
             echo "📌 Extracted VERSION_NAME: $VERSION_NAME"
 
-      #          VERSION_NAME=$(grep -oP 'versionName\s*=\s*"\K[0-9A-Za-z._-]+' app/build.gradle.kts)
-      #          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
-      #          echo "📌 Extracted VERSION_NAME: $VERSION_NAME"
-
       - name: ⚙️ Make gradlew executable
         run: chmod +x gradlew
 
@@ -64,6 +60,21 @@ jobs:
         run: |
           mv app/build/outputs/apk/release/app-release.apk \
              app/build/outputs/apk/release/${{ env.APP_NAME }}-v${{ env.VERSION_NAME }}.apk
+
+      - name: 🗑️ Delete existing release and tag if exists
+        run: |
+          set -e
+          # Check if release exists
+          RELEASE_ID=$(gh release list --limit 100 | grep "v${{ env.VERSION_NAME }}" | awk '{print $1}' || true)
+          if [ -n "$RELEASE_ID" ]; then
+            echo "Deleting old release: $RELEASE_ID"
+            gh release delete "$RELEASE_ID" --yes
+            git push origin --delete "v${{ env.VERSION_NAME }}" || true
+          else
+            echo "No existing release found for v${{ env.VERSION_NAME }}"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
 
       - name: 📦 Upload Signed APK (Artifact)
         uses: actions/upload-artifact@v4
