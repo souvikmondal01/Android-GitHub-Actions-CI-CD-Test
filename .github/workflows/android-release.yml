@@ -37,11 +37,18 @@ jobs:
       - name: 📝 Get versionName from build.gradle.kts
         id: version
         run: |
-          #          VERSION_NAME=$(grep -oP 'versionName\s*=\s*"\K[0-9]+\.[0-9]+\.[0-9]+' app/build.gradle.kts)
-          #          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
-               VERSION_NAME=$(grep -oP 'versionName\s*=\s*"\K[0-9A-Za-z._-]+' app/build.gradle.kts)
-               echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
-               echo "📌 Extracted VERSION_NAME: $VERSION_NAME"
+          VERSION_NAME=$(grep -oP 'versionName\s*=\s*"\K[0-9A-Za-z._-]+' app/build.gradle.kts || true)
+
+          if [ -z "$VERSION_NAME" ]; then
+            echo "❌ versionName not found!"
+            exit 1
+          fi
+            echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
+            echo "📌 Extracted VERSION_NAME: $VERSION_NAME"
+
+      #          VERSION_NAME=$(grep -oP 'versionName\s*=\s*"\K[0-9A-Za-z._-]+' app/build.gradle.kts)
+      #          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
+      #          echo "📌 Extracted VERSION_NAME: $VERSION_NAME"
 
       - name: ⚙️ Make gradlew executable
         run: chmod +x gradlew
@@ -74,7 +81,7 @@ jobs:
             📢 New release for **${{ env.APP_NAME }}**!
             See the attached asset for more details.
           draft: false
-          prerelease: true
+          prerelease: false
           generate_release_notes: true
           tag_name: v${{ env.VERSION_NAME }}
         env:
