@@ -37,8 +37,11 @@ jobs:
       - name: 📝 Get versionName from build.gradle.kts
         id: version
         run: |
-          VERSION_NAME=$(grep -oP 'versionName\s*=\s*"\K[0-9]+\.[0-9]+\.[0-9]+' app/build.gradle.kts)
-          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
+          #          VERSION_NAME=$(grep -oP 'versionName\s*=\s*"\K[0-9]+\.[0-9]+\.[0-9]+' app/build.gradle.kts)
+          #          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
+               VERSION_NAME=$(grep -oP 'versionName\s*=\s*"\K[0-9A-Za-z._-]+' app/build.gradle.kts)
+               echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
+               echo "📌 Extracted VERSION_NAME: $VERSION_NAME"
 
       - name: ⚙️ Make gradlew executable
         run: chmod +x gradlew
@@ -69,9 +72,9 @@ jobs:
           name: v${{ env.VERSION_NAME }}
           body: |
             📢 New release for **${{ env.APP_NAME }}**!
-            Download the APK below 👇
+            See the attached asset for more details.
           draft: false
-          prerelease: false
+          prerelease: true
           generate_release_notes: true
           tag_name: v${{ env.VERSION_NAME }}
         env:
